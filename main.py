@@ -9,9 +9,9 @@ def start_listen(sys, api):
     '''Method used to start listening new cmds'''
     while True:
         try:
-            cmds = api.get_command(api.last_resp['id'])
+            cmds = api.get_command(api.setup_data['id'])
             for cmd in cmds:
-                sys.run_cmd(cmd['cmd'])
+                sys.run_cmd(cmd)
                 api.update_cmd_status(cmd['id'])
         except: # pylint: disable=W0702
             api.post_new_setup(sys.info)

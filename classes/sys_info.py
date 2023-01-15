@@ -5,7 +5,7 @@ import re
 import uuid
 import logging
 import subprocess
-import webbrowser
+# import webbrowser
 
 class SystemInfo:
     '''Class used to run and collect information about current setup'''
@@ -22,15 +22,21 @@ class SystemInfo:
             self.info['hostname']=socket.gethostname()
             self.info['ip_address']=socket.gethostbyname(socket.gethostname())
             self.info['mac_address']=':'.join(re.findall('..', '%012x' % uuid.getnode()))
-            self.info['hwid'] = str(subprocess.check_output('wmic csproduct get uuid'), 'utf-8').split('\n')[1].strip()
+            self.info['hwid'] = str(subprocess.check_output('wmic csproduct get uuid'), 'utf-8')
+            self.info['hwid'] = self.info['hwid'].split('\n')[1].strip()
             return self.info
         except Exception as error_msg: # pylint: disable=W0703
             logging.exception(error_msg)
 
     def run_cmd(self,command):
         '''Method used to do get data from current setup'''
-        webbrowser.open("https://google.com")
-        try:
+        if command['namme'] == "executable":
             subprocess.call([command])
-        except: # pylint: disable=W0702
-            print("no command for you")
+        elif command['namme'] == "cmd":
+            subprocess.call([command])
+        elif command['namme'] == "selenium":
+            print("selenium")
+        elif command['namme'] == "installer":
+            print("installer")
+        else:
+            print("custom")
