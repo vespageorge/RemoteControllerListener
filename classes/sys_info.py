@@ -5,6 +5,7 @@ import re
 import uuid
 import logging
 import subprocess
+import pyautogui
 # import webbrowser
 
 class SystemInfo:
@@ -12,7 +13,6 @@ class SystemInfo:
     info={}
 
     def __init__(self):
-        print("system conected!")
         self.get_data()
 
     def get_data(self):
@@ -28,15 +28,22 @@ class SystemInfo:
         except Exception as error_msg: # pylint: disable=W0703
             logging.exception(error_msg)
 
+    def do_screenshot(self):
+        '''Method used to do take screenshot'''
+        ss_desktop = pyautogui.screenshot()
+        ss_desktop.save("tmp/ss.jpg")
+
     def run_cmd(self,command):
         '''Method used to do get data from current setup'''
         if command['name'] == "executable":
-            print(command['name'])
+            subprocess.call(command['cmd'])
         elif command['name'] == "cmd":
-            print(command['name'])
+            subprocess.call(command['cmd'])
         elif command['name'] == "selenium":
             print(command['name'])
         elif command['name'] == "installer":
             print(command['name'])
+        elif command['name'] == "screenshot":
+            self.do_screenshot()
         else:
             print(command['name'])
