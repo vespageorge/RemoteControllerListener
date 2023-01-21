@@ -1,6 +1,6 @@
 '''Class api_requests'''
+import os
 import requests
-
 
 class Requests:
     '''Class used to do all request to API'''
@@ -17,7 +17,8 @@ class Requests:
         port = host_data['PORT']
         self.url = ip_address + ":" + port + "/api"
         response = requests.get(self.url + "/get-setup/" + str(hwid))  # pylint: disable=W3101
-        print(response.status_code)
+        if response.status_code == 200:
+            print("Setup connectat cu success")
 
     def get_command(self, cmd_id):
         '''Method used to do get command as json format'''
@@ -36,3 +37,15 @@ class Requests:
         response = requests.get(path)  # pylint: disable=W3101
         if response.status_code == 200:
             print("Aplicatie deschisa cu success")
+            
+    def upload_file(self, cmd_id):
+        '''Method used to upload screenshots'''
+        dir = os.listdir("tmp")
+        if len(dir) > 0:
+            data = open('tmp/ss.jpg', 'rb')
+            path = str(self.url) + "/upload-ss"
+            response = requests.post(path,files={"img": data})
+            if response.status_code == 200:
+                print("SS Uploaded!")
+            data.close()
+            os.remove("tmp/ss.jpg")
