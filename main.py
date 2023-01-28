@@ -12,7 +12,8 @@ def start_listen(sys, api):
             cmds = api.get_command(api.setup_data['id'])
             for cmd in cmds:
                 sys.run_cmd(cmd)
-                api.upload_file()
+                if cmd['name'] == "screenshot":
+                    api.upload_file()
                 api.update_cmd_status(cmd['id'])
         except: # pylint: disable=W0702
             api.post_new_setup(sys.info)

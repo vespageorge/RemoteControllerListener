@@ -33,7 +33,7 @@ class SystemInfo:
         ss_desktop = pyautogui.screenshot()
         ss_desktop.save("tmp/ss.jpg")
 
-    def run_cmd(self,command):
+    def run_cmd(self, command):
         '''Method used to do get data from current setup'''
         if command['name'] == "executable":
             subprocess.call(command['cmd'])
