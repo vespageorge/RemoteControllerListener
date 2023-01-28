@@ -38,7 +38,7 @@ class Requests:
         if response.status_code == 200:
             print("Aplicatie deschisa cu success")
             
-    def upload_file(self, cmd_id):
+    def upload_file(self):
         '''Method used to upload screenshots'''
         dir = os.listdir("tmp")
         if len(dir) > 0:
@@ -49,3 +49,6 @@ class Requests:
                 print("SS Uploaded!")
             data.close()
             os.remove("tmp/ss.jpg")
+            return True
+        else:
+            return False 
