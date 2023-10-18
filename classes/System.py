@@ -30,7 +30,7 @@ class SystemInfo:
         ss_desktop.save(f"tmp/{self.imgName}.png")
 
     def ExecuteCMD(self, device, command):
-        '''Method used to do get data from current setup'''
+        '''Method used to execute the command by cmd name'''
         if command['name'] == "executable":
             subprocess.call(command['cmd'])
         elif command['name'] == "cmd":
