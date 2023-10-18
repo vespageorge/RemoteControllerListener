@@ -1,35 +1,19 @@
 '''Main script used as a lisener'''
-import configparser
-import time
-from classes.sys_info import SystemInfo
-from classes.api_requests import Requests
-
-
-def start_listen(sys, api):
-    '''Method used to start listening new cmds'''
-    while True:
-        try:
-            cmds = api.get_command(api.setup_data['id'])
-            for cmd in cmds:
-                sys.run_cmd(cmd)
-                if cmd['name'] == "screenshot":
-                    api.upload_file()
-                api.update_cmd_status(cmd['id'])
-        except: # pylint: disable=W0702
-            api.post_new_setup(sys.info)
-        time.sleep(5)
+import argparse, configparser
+from classes.Middleman import Middleman
 
 def main():
     ''' Main function which is used to initialized classes'''
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-c","--config", help="Use for selecting config_name.ini")
+
+    args = vars(parser.parse_args())
+
     config = configparser.ConfigParser()
-    config.read('settings/config.ini')
+    config.read(f"settings/{args['config']}.ini")
 
-    sys = SystemInfo()
-
-    api = Requests(sys.info['hwid'], config['HOST'])
-    api.post_new_setup(sys.info)
-
-    start_listen(sys, api)
+    Middleman(config, True)
 
 if __name__ == "__main__":
     main()
